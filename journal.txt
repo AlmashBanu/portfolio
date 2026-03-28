@@ -1,0 +1,12 @@
+now=datetime.now()
+date_string=now.strftime("%A,%B,%d,%Y")
+print(f"___Journaling for{date_string}___")
+print("Write your entry.Type 'SAVE'to finish")
+with open ("Journal.txt","a")as file:
+file.write(f"\n{'='*30}\n{date_string}\n{'='*30}\n)
+while true:
+line=input()
+if line.upper()=="SAVE":
+break;
+file.write(line+"\n")
+print("saved!")
