@@ -1,7 +1,7 @@
-from flask import Flask, request, redirect, render_template
+from flask import Flask, request, redirect, render_template, url_for
 import sqlite3
 import os
-
+print("DB PATH:", os.path.abspath('data.db'))
 app = Flask(__name__)
 
 # Create DB
@@ -18,6 +18,7 @@ def home():
 
 @app.route('/submit', methods=['POST'])
 def submit():
+    print("FORM HIT")  
     name = request.form['name']
     email = request.form['email']
     subject = request.form['subject']
@@ -30,8 +31,21 @@ def submit():
     conn.commit()
     conn.close()
 
-    return "Form submitted successfully!"
+    
+    return redirect(url_for('view'))
+
+# 🔥 ADD THIS PART
+@app.route('/view')
+def view():
+    if request.args.get("key") != "admin123":
+        return "Unauthorized"
+    conn = sqlite3.connect('data.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM contacts")
+    data = c.fetchall()
+    conn.close()
+
+    return render_template("view.html", data=data)
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(debug=True)
