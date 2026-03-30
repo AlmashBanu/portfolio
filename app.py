@@ -38,7 +38,7 @@ def submit():
 @app.route('/view')
 def view():
     if request.args.get("key") != "admin123":
-        return "Unauthorized"
+        return "Form Submitted Successfully!"
     conn = sqlite3.connect('data.db')
     c = conn.cursor()
     c.execute("SELECT * FROM contacts")
